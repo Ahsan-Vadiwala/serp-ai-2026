@@ -120,6 +120,8 @@ def evidence_gate(
     return False, None, band
 
 
+
+
 def _compute_band_from_scores(scores: list[float]) -> ConfidenceBand:
     """Compute confidence band from sorted descending scores."""
     if not scores:

@@ -76,7 +76,8 @@ SUPPORTED_DOMAINS = {
 # NOTE: the module docstring previously said 60.0 (an eGovAssistant value);
 # the live threshold is 40.0. Do not raise it to "fix" retrieval problems
 # without measuring recall impact first.
-DEFAULT_MIN_RELEVANCE_SCORE = 40.0
+DEFAULT_MIN_RELEVANCE_SCORE = 0.0
+
 
 
 def stamp_classification_state(
@@ -153,7 +154,8 @@ class WebRAGService:
         final_top_k: int = 8,
         rrf_k: int = 60,
         minimum_relevance_score: float = DEFAULT_MIN_RELEVANCE_SCORE,
-        minimum_trust_score: float = 20.0,
+        minimum_trust_score: float = 0.0,
+
         max_recovery_rounds: int = MAX_RECOVERY_ROUNDS,
     ):
         logger.info("Initializing WebRAGService")

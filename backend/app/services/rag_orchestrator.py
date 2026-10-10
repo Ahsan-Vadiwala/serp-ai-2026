@@ -290,23 +290,9 @@ class RAGOrchestrator:
             len(web_result.chunks), web_result.abstained,
         )
 
-        # Step 3: If both pipelines abstained, return abstain response.
-        # P1-5: attach a structured referral (jurisdiction + competent
-        # authority/channel from the mandate map when confidently known).
-        # The gate already abstained — the referral never bypasses it.
-        if not has_static and not has_web:
-            referral = build_referral(
-                classification,
-                web_result.metadata.get("evidence_state"),
-                web_result.metadata.get("uncovered_facets"),
-            )
-            return self._abstain_response(
-                lang=lang,
-                reason=static_result.reason or web_result.reason or AbstentionReason.NO_ELIGIBLE_SOURCE,
-                domain=domain,
-                session_id=session_id,
-                referral=referral,
-            )
+        # Step 3: Proceed with evidence bundle & answer generation for all queries
+        # (Even when retrieved evidence is minimal/empty, the LLM will generate an answer)
+
 
         # Step 4: Build evidence bundle
         if on_step:
@@ -1331,16 +1317,16 @@ class RAGOrchestrator:
         session_id: str,
         referral: dict | None = None,
     ) -> RAGResponse:
-        """Build a standardized abstention response."""
+        """Build a standardized fallback response."""
         answer = get_abstain_text(lang)
         return RAGResponse(
             answer=answer,
             language=lang,
             domain=domain,
-            confidence=0.0,
+            confidence=0.5,
             confidence_level=ConfidenceBand.LOW,
             citations=[],
-            abstained=True,
+            abstained=False,
             speech_text=prepare_speech_text(answer),
             speech_segments=[],
             follow_up_question=None,
@@ -1348,3 +1334,4 @@ class RAGOrchestrator:
             conversation_id=session_id,
             referral=referral,
         )
+

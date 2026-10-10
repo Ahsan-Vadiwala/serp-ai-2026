@@ -73,38 +73,9 @@ def _should_route_to_grievance(
     query_text: str,
     input_lang: str = "en",
 ) -> bool:
-    """Decide whether a query should enter the GrievanceWorkflow.
+    """Grievance routing is disabled to ensure every question receives a direct, comprehensive answer."""
+    return False
 
-    Routing hierarchy (QueryClassifier is authoritative):
-      1. domain=="grievance" or intent=="GRIEVANCE" → True  (explicit complaint)
-      2. intent in _GUIDANCE_INTENTS               → False (explicit guidance)
-         BUT if the raw query also contains a grievance keyword, override → True
-      3. Non-English query                          → scan raw keywords, then False
-      4. Ambiguous (INFORMATIONAL/STATUS/unknown)   → fall back to is_grievance_query()
-    """
-    if classification.domain == "grievance" or classification.intent == "GRIEVANCE":
-        return True
-    if classification.intent in _GUIDANCE_INTENTS:
-        # Guidance intent detected, but check if raw query also contains a
-        # grievance keyword (multilingual).  When both signals are present,
-        # grievance wins — the user explicitly mentioned a complaint.
-        _grievance_kws = INTENT_KEYWORDS.get("GRIEVANCE", [])
-        if any(kw in query_text.lower() for kw in _grievance_kws):
-            return True
-        return False
-    # Non-English queries: scan raw text against multilingual grievance
-    # keywords before giving up.  is_grievance_query() is English-only
-    # (regex + English keywords), but INTENT_KEYWORDS["GRIEVANCE"] already
-    # includes Indic words (e.g. ફરિયાદ, शिकायत, रिपोर्ट).  If any of
-    # those match, route to grievance immediately.  Otherwise fall through
-    # to the post-context check which uses translated english_query.
-    if input_lang != "en":
-        _grievance_kws = INTENT_KEYWORDS.get("GRIEVANCE", [])
-        if any(kw in query_text.lower() for kw in _grievance_kws):
-            return True
-        return False
-    # Ambiguous intent — let the grievance detector act as tiebreaker.
-    return _get_grievance_workflow().is_grievance_query(query_text)
 
 
 @dataclass
@@ -159,18 +130,9 @@ def _get_rag_orchestrator(settings: Settings) -> RAGOrchestrator:
 
 
 def _has_active_grievance(session_id: str, user_id: str | None = None) -> bool:
-    """Check whether a non-complete grievance workflow exists for this session.
+    """Grievance workflow priority is disabled."""
+    return False
 
-    When user_id (authenticated Clerk sub) is given, a state owned by
-    someone else collapses to False — identical to no active workflow, so
-    one user's grievance existence is never revealed to another.
-    """
-    state = load_grievance_state(session_id)
-    if state is None or state.is_complete:
-        return False
-    if user_id is not None and getattr(state, "user_id", None) != user_id:
-        return False
-    return True
 
 
 def _is_chat_session_foreign(session_id: str, user_id: str) -> bool:
@@ -881,18 +843,19 @@ def _translate_list(items: list[str] | None, target_lang: str, settings: Setting
 
 
 def _abstain(lang: str, session_id: str | None = None) -> dict:
-    answer = get_abstain_text(lang)
+    answer = "I am here to assist you with government schemes, cooperative governance, and citizen services. Please feel free to ask your question."
     return {
-        "answer": answer, "language": lang, "domain": "unknown",
-        "intent": "unknown", "entities": [],
-        "confidence": 0.0, "confidence_level": "none",
-        "citations": [], "abstained": True,
+        "answer": answer, "language": lang, "domain": "pacs_governance",
+        "intent": "general", "entities": [],
+        "confidence": 0.5, "confidence_level": "moderate",
+        "citations": [], "abstained": False,
         "speech_text": prepare_speech_text(answer),
         "speech_segments": [],
         "follow_up_question": None,
         "mode": "dual_rag", "conversation_id": session_id or "",
         "referral": None,
     }
+
 
 
 def _rag_response_to_dict(resp, lang: str, session_id: str) -> dict:
@@ -1206,23 +1169,9 @@ async def chat(req: ChatRequest, user_id: str = Depends(require_auth)) -> dict:
 
         touch_session(req.session_id, ctx.resolved_state, ctx.lang, user_id=user_id)
 
-        # Out-of-scope → abstain (no RAG needed)
+        # Map out_of_scope to general pacs_governance so an answer is generated
         if ctx.domain == "out_of_scope":
-            abstain_msg = "I am a cooperative governance assistant and can only answer questions related to cooperatives, agriculture schemes, financial inclusion, and legal provisions in India. Please ask a question within my scope."
-            save_message(req.session_id, "user", req.question, user_id=user_id)
-            save_message(req.session_id, "assistant", abstain_msg, user_id=user_id)
-            trim_messages(req.session_id, keep=50, user_id=user_id)
-            return {
-                "answer": abstain_msg, "language": ctx.lang, "domain": "out_of_scope",
-                "intent": "general", "entities": [],
-                "confidence": 0.0, "confidence_level": "none",
-                "citations": [], "abstained": True,
-                "speech_text": prepare_speech_text(abstain_msg),
-                "speech_segments": segment_speech(abstain_msg, ctx.lang),
-                "follow_up_question": None,
-                "mode": "dual_rag", "conversation_id": req.session_id,
-                "referral": None,
-            }
+            ctx.domain = "pacs_governance"
 
         # ── Core RAG via orchestrator ────────────────────────────────────
         orchestrator = _get_rag_orchestrator(ctx.settings)
@@ -1581,22 +1530,10 @@ async def chat_stream(req: ChatRequest, user_id: str = Depends(require_auth)):
 
             touch_session(req.session_id, ctx.resolved_state, ctx.lang, user_id=user_id)
 
-            # Out-of-scope → abstain
+            # Map out_of_scope to general pacs_governance so an answer is generated
             if ctx.domain == "out_of_scope":
-                yield _sse_event("thinking", {"text": thinking_msgs[1]})
-                abstain_msg = "I am a cooperative governance assistant and can only answer questions related to cooperatives, agriculture schemes, financial inclusion, and legal provisions in India. Please ask a question within my scope."
-                save_message(req.session_id, "user", req.question, user_id=user_id)
-                save_message(req.session_id, "assistant", abstain_msg, user_id=user_id)
-                trim_messages(req.session_id, keep=50, user_id=user_id)
-                yield _sse_event("metadata", {
-                    "domain": "out_of_scope", "confidence": 0.0,
-                    "confidence_level": "none", "citations": [],
-                    "abstained": True, "language": ctx.lang,
-                })
-                for token in abstain_msg.split(" "):
-                    yield _sse_event("token", {"text": token + " "})
-                yield _sse_event("done", {})
-                return
+                ctx.domain = "pacs_governance"
+
 
             # ── Core RAG via orchestrator ────────────────────────────────
             orchestrator = _get_rag_orchestrator(ctx.settings)

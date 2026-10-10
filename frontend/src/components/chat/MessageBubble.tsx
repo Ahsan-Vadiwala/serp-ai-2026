@@ -376,11 +376,15 @@ export function MessageBubble({ resp, isStreaming = false }: { resp: ChatRespons
               <Badge deco={deco(resp.domain)}>{domainLabel}</Badge>
             </div>
           </div>
-          <Alert tone="warn">
-            <div className="space-y-1">
-              <p className="font-semibold">{t("abstained.title")}</p>
-              <p className="text-xs opacity-80">{t("abstained.description")}</p>
-            </div>
+          <Alert tone={resp.transport_error ? "error" : "warn"}>
+            {resp.transport_error ? (
+              <p>{t("common.error")}</p>
+            ) : (
+              <div className="space-y-1">
+                <p className="font-semibold">{t("abstained.title")}</p>
+                <p className="text-xs opacity-80">{t("abstained.description")}</p>
+              </div>
+            )}
           </Alert>
         </div>
       </div>

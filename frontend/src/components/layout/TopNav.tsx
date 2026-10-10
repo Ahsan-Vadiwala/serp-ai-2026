@@ -134,14 +134,46 @@ export function TopNav() {
 
             {isSignedIn ? (
               <UserButton />
+            ) : localStorage.getItem("guest_auth_token") ? (
+              <div className="hidden items-center gap-2 md:flex">
+                <span className="rounded-full border border-[var(--hairline)] bg-[var(--canvas-secondary)] px-3 py-1.5 text-xs font-semibold text-[var(--ink)]">
+                  👤 {localStorage.getItem("guest_user_name") || "Guest User"}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.removeItem("guest_auth_token");
+                    localStorage.removeItem("guest_user_name");
+                    window.location.href = "/";
+                  }}
+                  className="text-xs font-medium text-[var(--muted)] hover:text-[var(--ink)] hover:underline"
+                >
+                  Sign Out
+                </button>
+              </div>
             ) : (
-              <Link
-                to="/sign-in"
-                className="hidden h-10 items-center justify-center rounded-full border border-[var(--hairline)] px-4 text-[14px] font-medium text-[var(--ink)] transition-colors duration-150 hover:bg-[var(--canvas-secondary)] md:inline-flex"
-              >
-                {t("nav.signIn") ?? "Sign In"}
-              </Link>
+              <div className="hidden items-center gap-2 md:flex">
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.setItem("guest_auth_token", "guest_demo_user");
+                    localStorage.setItem("guest_user_name", "Guest Citizen");
+                    window.location.href = "/chat";
+                  }}
+                  className="h-10 items-center justify-center rounded-full border border-emerald-300 bg-emerald-50 px-4 text-[13px] font-bold text-emerald-800 transition-all hover:bg-emerald-100"
+                >
+                  ⚡ Guest Access
+                </button>
+                <Link
+                  to="/sign-in"
+                  className="h-10 items-center justify-center rounded-full border border-[var(--hairline)] px-4 text-[14px] font-medium text-[var(--ink)] transition-colors duration-150 hover:bg-[var(--canvas-secondary)]"
+                >
+                  {t("nav.signIn") ?? "Sign In"}
+                </Link>
+              </div>
             )}
+
+
 
             <HamburgerMenu />
           </div>

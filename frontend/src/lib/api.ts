@@ -93,6 +93,14 @@ export interface ChatResponse {
     content?: string;
   }[];
   abstained: boolean;
+  /**
+   * Frontend-only marker: the request never produced a backend answer (network
+   * failure, non-2xx, aborted parse). Distinct from a backend abstention, which
+   * means the pipeline ran and deliberately declined to answer. Without this the
+   * error path reused the abstention card, so a 401 looked identical to a
+   * grounding refusal.
+   */
+  transport_error?: boolean;
   mode?: string;
   grievance?: Grievance | null;
   grievance_stage?: "classification" | "fields" | "complete" | null;
