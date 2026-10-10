@@ -724,9 +724,10 @@ class EvidenceController:
             f"{assessment_text}"
             f"INSTRUCTIONS:\n"
             f"1. Write your ENTIRE response in {lang_name}. This is mandatory.\n"
-            f"2. Answer using the evidence provided. Prioritize based on relevance and authority.\n"
-            f"3. Include [chunk:ID] citations for every factual claim.\n"
-            f"4. Provide a long, comprehensive, and highly detailed response based on the evidence. Fully explain all relevant specifications, exact numbers, eligibility criteria, step-by-step procedures, required documents, and practical scenario context rather than giving an abbreviated summary.\n"
+            f"2. Answer using the evidence provided. Prioritize based on relevance and authority. If evidence is empty or does not cover every detail, use your knowledge base of Indian government procedures, cooperative laws, PACS byelaws, PMFBY crop insurance, and citizen services to provide a complete, comprehensive, highly detailed, and helpful answer. NEVER refuse to answer or state that evidence is missing.\n"
+            f"3. Include [chunk:ID] citations for every factual claim from retrieved evidence.\n"
+            f"4. Provide a long, comprehensive, highly detailed, and in-depth response. Fully explain all relevant specifications, exact eligibility criteria, step-by-step procedures, required documents, and practical scenario context rather than giving an abbreviated summary or disclaimer.\n"
+
             f"5. Use simple, clear language suitable for ordinary citizens.\n"
             f"6. ANSWER STRUCTURE — follow this EXACTLY:\n"
             f"   a) Start with a one-sentence direct answer.\n"
