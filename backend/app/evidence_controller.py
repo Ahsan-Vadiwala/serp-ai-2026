@@ -477,6 +477,12 @@ def strip_citations(answer: str) -> tuple[str, list[str]]:
     return clean, ids
 
 
+_FACET_REFUSAL_LEAK = re.compile(
+    r"[ \t]*(?:[A-Za-z0-9_\-]+[ \t]+)?Evidence insufficient for\b[^\n]*?not answered\.?",
+    re.IGNORECASE,
+)
+
+
 def clean_answer(answer: str) -> str:
     """Post-process LLM output to fix common formatting issues.
 
@@ -486,7 +492,14 @@ def clean_answer(answer: str) -> str:
     - Remove markdown heading markers (##, ###) that appear as literal
       text instead of rendering as headings.
     - Collapse runs of blank lines (3+ newlines → 2).
+    - Strip the facet refusal template when the model echoes it as answer text.
     """
+    # The facet instruction asks the model to write "Evidence insufficient for
+    # [facet] — not answered." as an internal sentinel, and rule 7 forbids
+    # emitting it literally. Reasoning models still echo it (sometimes with the
+    # facet id prefixed), which leaks control-channel plumbing into the answer.
+    # Strip deterministically rather than relying on the instruction.
+    answer = _FACET_REFUSAL_LEAK.sub("", answer)
     # Remove all variants of <br> tags
     answer = re.sub(r'<br\s*/?>', '\n', answer, flags=re.IGNORECASE)
     # Remove standalone horizontal rules (---, ***, ___) on their own line

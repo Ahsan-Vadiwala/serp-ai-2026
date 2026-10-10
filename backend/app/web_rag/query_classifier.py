@@ -802,17 +802,19 @@ def effective_domain(
 
     The AnchorStore domain (keyword + embedding) wins whenever it is
     specific; the QueryClassifier domain only fills in when the anchor
-    is empty/general. ``out_of_scope`` is never overridden here (the
-    chat layer abstains on it before retrieval), so both pipelines
-    always plan and filter on the same domain for the same query.
+    is empty/general. Domain 'grievance' maps to 'pacs_governance'.
     """
+    res = anchor_domain or "general"
     if (
         (not anchor_domain or anchor_domain == "general")
         and classification is not None
         and classification.domain != "general"
     ):
-        return classification.domain
-    return anchor_domain or "general"
+        res = classification.domain
+    if res == "grievance":
+        res = "pacs_governance"
+    return res
+
 
 
 def resolve_expected_state(
