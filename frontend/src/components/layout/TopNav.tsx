@@ -134,6 +134,23 @@ export function TopNav() {
 
             {isSignedIn ? (
               <UserButton />
+            ) : localStorage.getItem("guest_auth_token") ? (
+              <div className="hidden items-center gap-2 md:flex">
+                <span className="rounded-full border border-[var(--hairline)] bg-[var(--canvas-secondary)] px-3 py-1.5 text-xs font-semibold text-[var(--ink)]">
+                  👤 {localStorage.getItem("guest_user_name") || "Guest User"}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.removeItem("guest_auth_token");
+                    localStorage.removeItem("guest_user_name");
+                    window.location.href = "/";
+                  }}
+                  className="text-xs font-medium text-[var(--muted)] hover:text-[var(--ink)] hover:underline"
+                >
+                  Sign Out
+                </button>
+              </div>
             ) : (
               <Link
                 to="/sign-in"
@@ -142,6 +159,7 @@ export function TopNav() {
                 {t("nav.signIn") ?? "Sign In"}
               </Link>
             )}
+
 
             <HamburgerMenu />
           </div>

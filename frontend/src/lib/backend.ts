@@ -41,20 +41,20 @@ export function registerTokenProvider(fn: TokenProvider | null) {
   getClerkToken = fn;
 }
 
-/** The bearer header for an outbound request, or {} when signed out. */
+/** The bearer header for an outbound request, or fallback guest token when signed out. */
 export async function authHeaders(): Promise<Record<string, string>> {
-  if (!getClerkToken) return {};
-  try {
-    const token = await getClerkToken();
-    return token ? { Authorization: `Bearer ${token}` } : {};
-  } catch {
-    // A token that cannot be minted is NOT the same as being signed out, but
-    // from the browser's side there is nothing better to do than send the
-    // request unauthenticated and let FastAPI answer 401. Swallowing here keeps
-    // a Clerk blip from turning every request into a thrown network error.
-    return {};
+  if (getClerkToken) {
+    try {
+      const token = await getClerkToken();
+      if (token) return { Authorization: `Bearer ${token}` };
+    } catch {
+      // Fall through to guest token on Clerk error
+    }
   }
+  const guestToken = localStorage.getItem("guest_auth_token") || "guest_demo_user";
+  return { Authorization: `Bearer ${guestToken}` };
 }
+
 
 /*
  * BFF path -> FastAPI path.
