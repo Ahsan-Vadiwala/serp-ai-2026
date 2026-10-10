@@ -58,6 +58,8 @@ const en: Record<string, string> = {
   "evidence.weak": "Weak source support",
 
   "abstained.title": "This answer needs human verification",
+  "abstained.description":
+    "We could not find enough supporting evidence to answer confidently. Check the official source, or try rephrasing your question.",
 
   "domain.cropInsurance": "Crop insurance",
   "domain.financial": "Financial literacy",
@@ -458,6 +460,8 @@ const hi: Record<string, string> = {
   "evidence.weak": "कमज़ोर स्रोत समर्थन",
 
   "abstained.title": "इस उत्तर का मानव सत्यापन आवश्यक है",
+  "abstained.description":
+    "विश्वसनीय उत्तर देने के लिए पर्याप्त प्रमाण नहीं मिल सके। आधिकारिक स्रोत देखें, या अपना प्रश्न दोबारा लिखें।",
 
   "domain.cropInsurance": "फ़सल बीमा",
   "domain.financial": "वित्तीय साक्षरता",
@@ -854,6 +858,8 @@ const mr: Record<string, string> = {
   "evidence.weak": "कमकुवत स्रोत समर्थन",
 
   "abstained.title": "या उत्तरासाठी मानवी पडताळणी आवश्यक आहे",
+  "abstained.description":
+    "विश्वासार्ह उत्तर देण्यासाठी पुरेसे पुरावे सापडले नाहीत. अधिकृत स्रोत पहा, किंवा तुमचा प्रश्न पुन्हा लिहा.",
 
   "domain.cropInsurance": "पीक विमा",
   "domain.financial": "आर्थिक साक्षरता",
@@ -1246,6 +1252,8 @@ const bn: Record<string, string> = {
   "evidence.weak": "দুর্বল সূত্র সমর্থন",
 
   "abstained.title": "এই উত্তরটির মানব যাচাই প্রয়োজন",
+  "abstained.description":
+    "নির্ভরযোগ্য উত্তর দেওয়ার মতো যথেষ্ট প্রমাণ পাওয়া যায়নি। সরকারি সূত্র দেখুন, বা আপনার প্রশ্নটি আবার লিখুন।",
 
   "domain.cropInsurance": "ফসল বিমা",
   "domain.financial": "আর্থিক সাক্ষরতা",
@@ -1509,6 +1517,8 @@ const ta: Record<string, string> = {
   "evidence.weak": "பலவீனமான ஆதார ஆதரவு",
 
   "abstained.title": "இந்த பதிலுக்கு மனித சரிபார்ப்பு தேவை",
+  "abstained.description":
+    "நம்பகமான பதிலை வழங்கப் போதுமான சான்றுகள் கிடைக்கவில்லை. அரசு ஆவணத்தைப் பார்க்கவும், அல்லது உங்கள் கேள்வியை மீண்டும் எழுதவும்.",
 
   "domain.cropInsurance": "பயிர் காப்பீடு",
   "domain.financial": "நிதி கல்வி",
@@ -1854,6 +1864,8 @@ const te: Record<string, string> = {
   "evidence.weak": "బలహీనమైన ఆధారం",
 
   "abstained.title": "ఈ సమాధానానికి మానవ ధృవీకరణ అవసరం",
+  "abstained.description":
+    "నమ్మకమైన సమాధానం ఇవ్వడానికి తగిన ఆధారాలు దొరకలేదు. అధికారిక మూలం చూడండి, లేదా మీ ప్రశ్నను మళ్లీ రాయండి.",
 
   "domain.cropInsurance": "పంట బీమా",
   "domain.financial": "ఆర్థిక అక్షరాస్యత",
@@ -2138,6 +2150,8 @@ const kn: Record<string, string> = {
   "evidence.weak": "ದುರ್ಬಲ ಮೂಲ ಬೆಂಬಲ",
 
   "abstained.title": "ಈ ಉತ್ತರಕ್ಕೆ ಮಾನವ ಪರಿಶೀಲನೆ ಅಗತ್ಯವಿದೆ",
+  "abstained.description":
+    "ವಿಶ್ವಾಸಾರ್ಹ ಉತ್ತರ ನೀಡಲು ಸಾಕಷ್ಟು ಪುರಾವೆಗಳು ಸಿಗಲಿಲ್ಲ. ಅಧಿಕೃತ ಮೂಲ ನೋಡಿ, ಅಥವಾ ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಮತ್ತೆ ಬರೆಯಿರಿ.",
 
   "domain.cropInsurance": "ಬೆಳೆ ವಿಮೆ",
   "domain.financial": "ಹಣಕಾಸು ಸಾಕ್ಷರತೆ",
@@ -2421,6 +2435,8 @@ const pa: Record<string, string> = {
   "evidence.weak": "ਕਮਜ਼ੋਰ ਸਰੋਤ ਸਮਰਥਨ",
 
   "abstained.title": "ਇਸ ਉੱਤਰ ਲਈ ਮਨੁੱਖੀ ਪ੍ਰਮਾਣਿਕਤਾ ਜ਼ਰੂਰੀ ਹੈ",
+  "abstained.description":
+    "ਭਰੋਸੇਯੋਗ ਜਵਾਬ ਦੇਣ ਲਈ ਢੁਕਵਾਂ ਸਬੂਤ ਨਹੀਂ ਮਿਲੇ। ਅਧਿਕਾਰਤ ਸਰੋਤ ਵੇਖੋ, ਜਾਂ ਆਪਣਾ ਸਵਾਲ ਦੁਬਾਰਾ ਲਿਖੋ।",
 
   "domain.cropInsurance": "ਫ਼ਸਲ ਬੀਮਾ",
   "domain.financial": "ਵਿੱਤੀ ਸਾਖਰਤਾ",
@@ -2704,6 +2720,8 @@ const gu: Record<string, string> = {
   "evidence.weak": "નબળું સ્ત્રોત સમર્થન",
 
   "abstained.title": "આ જવાબ માટે માનવ ચકાસણી જરૂરી છે",
+  "abstained.description":
+    "વિશ્વસનીય જવાબ આપવા માટે પૂરતા પુરાવા મળ્યા નથી. અધિકારિક સ્રોત જુઓ, અથવા તમારો પ્રશ્ન ફરી લખો.",
 
   "domain.cropInsurance": "પાક વીમો",
   "domain.financial": "નાણાકીય સાક્ષરતા",
@@ -3055,6 +3073,8 @@ const or: Record<string, string> = {
   "evidence.weak": "ଦୁର୍ବଳ ଉତ୍ସ ସମର୍ଥନ",
 
   "abstained.title": "ଏହି ଉତ୍ତର ପାଇଁ ମାନବ ଯାଞ୍ଚ ଆବଶ୍ୟକ",
+  "abstained.description":
+    "ବିଶ୍ୱସନୀୟ ଉତ୍ତର ଦେଇବାକୁ ଯଥେଷ୍ଟ ପ୍ରମାଣ ମିଳିଲା ନାହିଁ। ସରକାରୀ ସ୍ରୋତ ଦେଖନ୍ତୁ, କିମ୍ବା ଆପଣଙ୍କ ପ୍ରଶ୍ନ ପୁନର୍ବା ଲେଖନ୍ତୁ।",
 
   "domain.cropInsurance": "ଫସଲ ବୀମା",
   "domain.financial": "ଆର୍ଥିକ ସାକ୍ଷରତା",
@@ -3338,6 +3358,8 @@ const ml: Record<string, string> = {
   "evidence.weak": "ദുർബലമായ ഉറവിട പിന്തുണ",
 
   "abstained.title": "ഈ ഉത്തരത്തിന് മാനുഷിക പരിശോധന ആവശ്യമാണ്",
+  "abstained.description":
+    "വിശ്വസനീയമായ ഉത്തരം നൽകാൻ ആവശ്യമായ തെളിവുകൾ ലഭിച്ചില്ല. ഔദ്യോഗിക ഉറവിടം കാണുക, അല്ലെങ്കിൽ നിങ്ങളുടെ ചോദ്യം വീണ്ടും എഴുതുക.",
 
   "domain.cropInsurance": "വിള ഇൻഷുറൻസ്",
   "domain.financial": "സാമ്പത്തിക സാക്ഷരത",

@@ -109,6 +109,7 @@ function fallback(lang: Locale): ChatResponse {
     confidence_level: "none",
     citations: [],
     abstained: true,
+    transport_error: true,
     follow_up_question: null,
   };
 }
