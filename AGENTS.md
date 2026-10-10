@@ -175,11 +175,10 @@ Optional (web RAG):
 
 Auth (required for chat/voice/grievance-write):
 - `CLERK_SECRET_KEY`, `CLERK_ISSUER` — backend JWT verification
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` — frontend sign-in
+- `VITE_CLERK_PUBLISHABLE_KEY` — frontend sign-in (Vite only exposes VITE_ vars to browser)
 
-Frontend proxy convention:
-- `BACKEND_API_URL` is the backend BASE (e.g. `http://localhost:8000`, no `/chat`
-  suffix). Restart `npm run dev` after changing `.env.local`.
+Frontend config:
+- `VITE_BACKEND_API_URL` is the backend BASE (e.g. `http://localhost:8000`, no `/chat` suffix). Browser calls FastAPI directly with Clerk JWT. No proxy server.
 
 Optional (translation):
 - `AZURE_TRANSLATOR_KEY`, `AZURE_TRANSLATOR_REGION`, `AZURE_TRANSLATOR_ENDPOINT`

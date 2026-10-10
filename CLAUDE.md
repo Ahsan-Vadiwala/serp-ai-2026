@@ -1,6 +1,6 @@
 # Project: Multilingual Cooperative Governance & Legal Assistance Chatbot
 
-You are assisting on an evidence-grounded, multilingual citizen-assistance PWA.
+You are assisting on an evidence-grounded, multilingual citizen-assistance SPA.
 
 **Before doing anything else in a new session: read `PROJECT_STATUS.md`.** It
 tells you what's actually built and what the current state is. This file
@@ -28,9 +28,9 @@ tells you what's actually built and what the current state is. This file
 
 | Layer | Technology | Notes |
 |---|---|---|
-| Frontend | React 19 + Vite 8 + React Router 7 + Tailwind CSS 4 | Static SPA in `frontend/`. **Not a PWA** — no manifest, no service worker |
+| Frontend | React 19 + Vite 8 + React Router 7 + Tailwind CSS 4 | Static SPA in `frontend/`. Not a PWA — no manifest, no service worker. 16 pages: Home, Chat, FAQ, Grievance, GrievanceStatus, GrievanceDraftView, Legal, LegalDetail, Library, Schemes, SchemeDetail, Services, ServiceDetail, SignIn, SignUp, NotFound |
 | Frontend API access | Direct browser → FastAPI | The browser attaches Clerk's session token. `src/lib/backend.ts` owns the URL mapping. Never reintroduce a proxy holding `CLERK_SECRET_KEY` — it is not needed and adds a port to deploy |
-| Backend | FastAPI (Python ≥3.11) on Render Free | `uvicorn app.main:app` |
+| Backend | FastAPI (Python ≥3.11) on Render Free | `uvicorn app.main:app` | 8 routers: chat, voice, conversations, evidence, grievance, documents, translate, webhooks |
 | DB + vectors | Supabase Postgres + pgvector (HNSW cosine) | 768d embeddings |
 | Embeddings | Jina Embeddings v3 (primary) | 768d, task-typed |
 | Embeddings fallback | Gemini embedding | 768d fallback |
@@ -63,6 +63,7 @@ POST /grievances/finalize         ← finalize grievance (returns submission gui
 POST /grievances/fields           ← get grievance field schema for a stage
 POST /grievances/clarify          ← answer clarification question
 POST /grievances/answer           ← answer a specific field
+POST /translate                   ← translation endpoint
 GET  /conversations/{session_id}
 GET  /evidence/{...}
 GET  /health
@@ -113,7 +114,7 @@ SSE events: `thinking | token | metadata | done`
 - ✅ StaticRAGService — Supabase pgvector hybrid retrieval (dense + lexical RRF)
 - ✅ WebRAGService — 10-step pipeline (Tavily/SerpApi-Google/Firecrawl → BM25 → Gemini rerank → verify) + ≤2 single-axis recovery rounds with cooperative deadline (no new round past `started + web_rag_timeout_s`)
 - ✅ Evidence gate, citation verifier, abstention
-- ✅ 11-language frontend (EN, HI, GU, MR, BN, TA, TE, KN, PA, OR, ML) with chat, grievance, schemes, library pages. Coverage is incomplete: 791 of 3,740 strings untranslated (`npm run i18n:coverage`); missing keys fall back to English
+- ✅ 11-language frontend (EN, HI, GU, MR, BN, TA, TE, KN, PA, OR, ML) with chat, grievance, schemes, library pages. Coverage is incomplete: 791 of 3,740 strings untranslated (`npm run i18n:coverage`); missing keys fall back to English. 16 frontend pages total.
 - ✅ Document ingestion: 11 docs, 4778 chunks (pacs_governance, pacs_computerization, pmfby, financial_inclusion)
 - ✅ Grievance localization — `FIELD_PROMPTS` (30 prompts), `SUBMISSION_STEPS`, `FOLLOWUP_PREFIX`, `WORKFLOW_PREFIX` maps in `translations.py`; `translate_field_prompt()` for field questions; frontend field card labels via `dictionaries.ts` i18n lookup
 

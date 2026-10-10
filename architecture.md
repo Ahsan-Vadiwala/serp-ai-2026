@@ -32,14 +32,16 @@ Evidence-grounded, multilingual citizen-assistance platform for cooperative gove
                           |
                           v
              +---------------------------+
-             |  FastAPI (app/main.py)    |
-             |  /chat  /chat/stream      |
+             |  FastAPI (app/main.py)    |            |  /chat  /chat/stream      |
              |  /voice /voice/transcribe |
              |  /voice/speak             |
              |  /conversations           |
              |  /evidence  /grievance    |
+             |  /documents/pdf/{file}    |
+             |  /translate               |
+             |  /webhooks                |
              |  /health /health/providers|
-              +------+------+------+------+
+              +------+------+------+------+------+------+
                      |      |      |
            +---------+      |      +----------+
            v                v                 v
@@ -192,12 +194,12 @@ Response: { answer, transcribed_text, audio_base64, language, domain,
 ## 5. Streaming SSE events (`/chat/stream`)
 
 Events emitted in order:
-1. `thinking` — `{ text: "Searching official documents & web..." }`
-2. `thinking` — `{ text: "Analyzing evidence from both sources..." }`
-3. `thinking` — `{ text: "Preparing answer..." }`
-4. `token` — `{ text: "word " }` (one per word)
-5. `metadata` — `{ domain, confidence, confidence_level, citations, abstained, language, mode }`
-6. `done` — `{}`
+1. `thinking` — `{ text: "..." }` (localized, first of 3 thinking messages)
+2. `token` — `{ text: "word " }` (one per word)
+3. `metadata` — `{ domain, confidence, confidence_level, citations, abstained, language, mode, [grievance?], [conversation_id?] }`
+4. `done` — `{}`
+
+Note: `_make_step_emitter()` exists in `chat.py` but no `step` SSE event is emitted — the function is unused.
 
 ---
 

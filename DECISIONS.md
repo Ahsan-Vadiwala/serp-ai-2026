@@ -13,7 +13,7 @@ Each entry: what changed, why, what it replaced, when.
 **Date:** 2026-08-26 → finalized  
 **What:** `jina-embeddings-v3` (768d, task-typed) is the primary embedding model. Gemini embedding is the fallback. Configured via `embed_model` and `jina_embed_model` in `config.py`.  
 **Why:** Jina v3 supports task-type differentiation (`retrieval.query` vs `retrieval.passage`), which improves asymmetric retrieval quality. Gemini embedding is kept as fallback.  
-**Current state (from `app/providers/embeddings.py`):** JinaEmbeddingProvider primary, GeminiEmbeddingProvider fallback.
+**Current state:** JinaEmbeddingProvider primary, GeminiEmbeddingProvider fallback (unchanged).
 
 ---
 
@@ -209,5 +209,5 @@ Each entry: what changed, why, what it replaced, when.
 
 ### `rag-fix` merged to `main` + backend freeze
 **Date:** 2026-10-06
-**What:** `rag-fix` (static 6-key RPC + as_of_date threading, grounding enforcement, PACS prompt fix, insurance-keyword fix, citation URL allowlist + marker normalization + full web IDs, Gemini 10s floor) merged into `main` (merge commit `403b9de`). Two same-hunk conflicts (`retrieval/__init__.py`, `services/static_rag.py`) resolved toward `rag-fix` (functional superset of `main`'s independent same fix); `main`'s `_env_file()`/Firecrawl/provider changes kept. Full suite 1434 passed / 83 pre-existing baseline failures; ruff clean; live smoke A–J passed.
+**What:** `rag-fix` (static 6-key RPC + as_of_date threading, grounding enforcement, PACS prompt fix, insurance-keyword fix, citation URL allowlist + marker normalization + full web IDs, Gemini 10s floor) merged into `main` (merge commit `403b9de`). Two same-hunk conflicts (`retrieval/__init__.py`, `services/static_rag.py`) resolved toward `rag-fix` (functional superset of `main`'s independent same fix); `main`'s `_env_file()`/Firecrawl/provider changes kept. Full suite 1387 passed / 83 pre-existing baseline failures (1472 collected, 2 deselected); ruff clean; live smoke A–J passed.
 **Why:** Freeze the validated backend before the hackathon demo. Accepted residual risks: external provider variance, no INSURANCE grievance category, Sarvam EN→GU code-mixing.

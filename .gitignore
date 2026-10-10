@@ -16,7 +16,7 @@ coverage/
 *.egg-info/
 build/
 dist/
-
+README_HACKATHON_AGENT_GUIDELINES.md
 # Scratch / debug / one-off eval outputs (not project logic)
 debug_*.py
 check_*.py

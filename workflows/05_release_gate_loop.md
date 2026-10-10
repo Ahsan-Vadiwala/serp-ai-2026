@@ -4,7 +4,7 @@
 
 **Status:** SPEC SUPERSEDED — release gating is the pytest suite + PROJECT_STATUS baselines (see note)
 
-> **Current state (code-grounded):** this loop was never built as specified — there is no `python -m eval.run_gate2`, no `eval/gate2_config.yaml`, and no `eval/gold_cases.yaml` (live variants with different names exist under `eval/`). In practice the release gate is the full backend pytest suite compared against the PROJECT_STATUS baseline (currently 1434 passed / 83 pre-existing failures) plus ruff. Treat the body below as the design record, not the implementation.
+> **Current state (code-grounded):** this loop was never built as specified — there is no `python -m eval.run_gate2`, no `eval/gate2_config.yaml`, and no `eval/gold_cases.yaml` (live variants with different names exist under `eval/`). In practice the release gate is the full backend pytest suite compared against the PROJECT_STATUS baseline (currently 1387 passed / 83 pre-existing failures (1472 collected, 2 deselected)) plus ruff. Treat the body below as the design record, not the implementation.
 
 ---
 

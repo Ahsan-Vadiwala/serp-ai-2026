@@ -80,7 +80,7 @@ chore: maintenance tasks
 ## Pull Requests
 
 1. PR description should explain **what** and **why**, not **how**
-2. All tests must pass
+2. All tests must pass (backend: 1387 passed / 83 pre-existing baseline failures, 1472 collected; frontend: 84 passed across 18 files)
 3. No secrets or API keys in the diff
 4. Update `PROJECT_STATUS.md` if your change affects component status
 5. Log any spec deviation in `DECISIONS.md`

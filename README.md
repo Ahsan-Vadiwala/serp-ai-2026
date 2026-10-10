@@ -49,18 +49,25 @@ low-confidence or uncited result into an answer.
 
 ---
 
+## Live Demo
+
+- **Deployed app:** [jansahay-farmer.vercel.app](https://jansahay-farmer.vercel.app/)
+- **Demo video:** [Google Drive folder](https://drive.google.com/drive/folders/1uIJkW0AyHEUnWy4hzXiRxt7l-I16_RTz?usp=sharing)
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
 |---|---|
 | Frontend | React 19 + Vite 8 + React Router 7 + Tailwind CSS 4 (static SPA, not a PWA) |
-| Backend | FastAPI (Python 3.11+) |
+| Backend | FastAPI (Python 3.11+), 8 routers (chat/voice/conversations/evidence/grievance/documents/translate/webhooks) |
 | Database | Supabase Postgres + pgvector (HNSW cosine index) |
 | Embeddings | Jina Embeddings v3 (`jina-embeddings-v3`), 768d |
 | LLM | Groq (primary) + Gemini (fallback); model names come from `GROQ_MODEL` / `GROQ_FALLBACK_MODEL` / `GEMINI_MODEL` env (`config.py` defaults are empty; note `.env.example` still names the retired `llama-3.3-70b-versatile` — do not use it) |
 | Reranker | Jina reranker (wired, disabled — `RERANKER_ENABLED=false`) |
 | Voice | Sarvam AI (STT + TTS) primary, Azure fallback, text-only final |
-| Document parsing | MinerU `content_list_v2.json` |
+| Document parsing | MinerU `content_list_v2.json` | 11 docs, 4,778 chunks, 768d Jina v3 |
 | Eval | Supabase-backed retrieval eval, pytest |
 
 ---
@@ -118,19 +125,18 @@ backend/
 
 frontend/
   src/
-    App.tsx                Router + Clerk provider wiring
+    App.tsx                Router + Clerk provider wiring (16 routes)
     main.tsx               Entry point
-    pages/                 HomePage, ChatPage, GrievancePage, SchemesPage, ServicesPage,
-                           LibraryPage, FaqPage, LegalPage (+ detail pages)
+    pages/                 HomePage, ChatPage, GrievancePage, GrievanceStatusPage, GrievanceDraftViewPage, SchemesPage, SchemeDetailPage, ServicesPage, ServiceDetailPage, LibraryPage, FaqPage, LegalPage, LegalDetailPage, SignInPage, SignUpPage, NotFoundPage
     components/
-      ChatWindow.tsx        Main chat UI (SSE streaming, voice, citations)
-      chat/                 MessageBubble, GrievanceFlow, panels, cards
-      layout/               Header, nav
-      ui/                   Button, Badge, Icons, etc.
+      ChatWindow.tsx        Main chat UI (SSE streaming, voice, citations; ThinkingProcess unwired)
+      chat/                 MessageBubble, GrievanceFlow, panels, cards, ThinkingProcess (unwired)
+      layout/               Header, nav, ConditionalNavs
+      ui/                   Button, Badge, Icons, Input, Card, Skeleton, etc. (15 components)
     lib/
       backend.ts            FastAPI base URL + legacy /api/* path mapping + bearer header
       api.ts                Backend API client (via backend.ts)
-      i18n/                 11-language i18n provider + dictionaries
+      i18n/                 11-language i18n provider + dictionaries (791/3740 untranslated)
       speech.ts             Browser speech recording
   index.html               SPA entry
   vite.config.ts           Dev server (port 5173, strictPort)
@@ -262,7 +268,7 @@ All UI strings translated. Backend responds in the same language as the question
 - Language-matching: responds in same language as question
 
 ### Auth + frontend access
-- `/chat`, `/chat/stream` (and grievance-write/voice) require a Clerk JWT → `401 {"detail":"Not authenticated"}` without it
+- `/chat`, `/chat/stream` (and grievance-write/voice/translate) require a Clerk JWT → `401 {"detail":"Not authenticated"}` without it
 - No proxy server: the browser calls FastAPI directly with Clerk's session token (`frontend/src/lib/backend.ts` owns the base URL, legacy `/api/*` path mapping, and bearer header). `VITE_BACKEND_API_URL` is the backend BASE (e.g. `http://localhost:8000`)
 
 ---

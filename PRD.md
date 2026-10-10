@@ -134,7 +134,7 @@ and inactivity pauses — the architecture tolerates all three.
 domain routing → hybrid RAG (static pgvector + web) → grounded, cited answers,
 with correct abstention on unsupported questions, and grievances can be created
 with multi-turn intake + status lookup guidance. Voice (STT/TTS) working via
-Sarvam AI.
+Sarvam AI. 8 backend routers, 16 frontend pages. Clerk auth mandatory on chat/voice/grievance-write/translation.
 
 > **Post-MVP current state (2026-10-06, see PROJECT_STATUS.md):** 11 languages
 > (EN, HI, GU, MR, BN, TA, TE, KN, PA, OR, ML); SerpApi Google live alongside
